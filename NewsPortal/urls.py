@@ -18,7 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    # Путь к панели администратора
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('post/', include('news.urls')),
+    # Перенаправление корневой страницы в приложение protect
+    path('', include('protect.urls')),
+    # Перенаправление в приложение sign
+    path('sign/', include('sign.urls')),
+    path('accounts/', include('allauth.urls')),
 ]

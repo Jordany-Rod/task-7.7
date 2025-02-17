@@ -5,6 +5,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+# импортирую PermissionRequiredMixin для предоставления прав доступа
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class PostList(ListView):
@@ -33,7 +36,7 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 # Создание новости
-class PostCreateNews(CreateView):
+class PostCreateNews(LoginRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit_news.html'
@@ -44,7 +47,7 @@ class PostCreateNews(CreateView):
         return super().form_valid(form)
 
 # Создание статьи
-class PostCreateArticles(CreateView):
+class PostCreateArticles(LoginRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit_articles.html'
@@ -55,25 +58,28 @@ class PostCreateArticles(CreateView):
         return super().form_valid(form)
 
 # Изменение новости
-class PostUpdateNews(UpdateView):
+class PostUpdateNews(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit_news.html'
 
 # Изменение статьи
-class PostUpdateArticles(UpdateView):
+class PostUpdateArticles(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit_articles.html'
 
 # Удаление новости
-class PostDeleteNews(DeleteView):
+class PostDeleteNews(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete_news.html'
     success_url = reverse_lazy('post_list')
 
 # Удаление новости
-class PostDeleteArticles(DeleteView):
+class PostDeleteArticles(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete_articles.html'
     success_url = reverse_lazy('post_list')
+
+class MyView(PermissionRequiredMixin, CreateView, UpdateView):
+    permission_required = ('news.add_post', 'news.change_post')

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-o5@iybmlp(+)0ckrn6k)3!_&+m-fgd=y%z0vzwfy^-f#=*^)os
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -40,9 +40,33 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'news',
-    'django_filters'
+    'django_filters',
+    'sign',
+    'protect',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # ... include the providers you want to enable:
+    'allauth.socialaccount.providers.yandex',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 SITE_ID = 1
+
+#LOGIN_URL = '/admin/'
+LOGIN_URL = '/accounts/login/'
+
+ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #"allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'NewsPortal.urls'
@@ -59,6 +84,7 @@ ROOT_URLCONF = 'NewsPortal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        #Все шаблоны из папки templates
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
